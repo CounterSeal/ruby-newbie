@@ -10,11 +10,12 @@ def stock_picker(prices)
 
 	prices.each_with_index do |firstPrice, i|
 		prices.each_with_index do |secondPrice, x|
-			diff = (prices[x+1].to_i - firstPrice)
-			if (diff > largestDiff) && (x >= i)
+      next if (i >= x)
+			diff = (secondPrice - firstPrice)
+			if (diff > largestDiff)
 				largestDiff = diff
 				buyDay = i
-				sellDay = (x+1)
+				sellDay = x
 			end
 		end
 	end
@@ -32,49 +33,6 @@ def stock_picker(prices)
 	end
 end
 
-=begin
-# Tyler's solution (Incomplete)
-
-def stock_picker(prices)
-  with_index = []
-  prices.each_with_index do |price, day|
-    with_index << [price, day]
-  end
-  sorted = with_index.sort do |one, two|
-    if one[0] == two[0]
-      two[1] <=> one[1]
-    else
-      one[0] <=> two[0]
-    end
-  end
-
-  x = sorted.length - 1
-  low = high = nil
-  largest_diff = 0
-  while x > 0
-    y = 0
-    while y < x
-      if sorted[x][1] < sorted[y][1]
-        y += 1
-        next
-      end
-      diff = sorted[x][0] - sorted[y][0]
-      if diff > largest_diff
-        high = sorted[x]
-        low = sorted[y]
-        largest_diff = diff
-        y = x
-      end
-      y += 1
-    end
-    x -= 1
-    break if y >= x
-  end
-
-  largestDiff = high[0] - low[0]
-  puts "Buy on Day #{low[1]} at $#{low[0]} and sell on Day #{high[1]} at $#{high[0]} for a $#{largestDiff} profit!"
-end
-=end
 
 stock_picker([17,3,6,9,15,8,6,1,10]) #[1,4]
 stock_picker([6,10,3,1,10,4]) #[3,4]
