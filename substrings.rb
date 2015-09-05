@@ -4,12 +4,24 @@
 # It should return a hash listing each substring (case insensitive) that was
 # found in the original string and how many times it was found.
 
-def substrings(words, wordList)
-	
+def substrings(words, dictionary)
+	wordList = words.downcase.split(/\W+/)
+	result = Hash.new
+
+	wordList.each do |a|
+		dictionary.each do |b|
+			if a.include? b
+				result[a] = 1
+			end
+		end
+	end
+
+	result
 end
 
 
-dictionary = ["below","down","go","going","horn","how","howdy",
+myDictionary = ["below","down","go","going","horn","how","howdy",
 	"it","i","low","own","part","partner","sit"]
 
-substrings("below", dictionary)
+substrings("below", myDictionary)
+substrings("Howdy partner, sit down! How's it going?", myDictionary)
