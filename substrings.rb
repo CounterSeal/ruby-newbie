@@ -6,22 +6,29 @@
 
 def substrings(words, dictionary)
 	wordList = words.downcase.split(/\W+/)
-	result = Hash.new
+	result = {}
 
-	wordList.each do |a|
-		dictionary.each do |b|
-			if a.include? b
-				result[a] = 1
-			end
+	dictionary.each do |a|
+		count = 0
+		wordList.each do |b|
+			count += 1 if (b.include? a)
 		end
+
+		result[a] = count unless (count == 0)
 	end
 
-	result
+	(result.empty?) ? (puts "There are no matches!") : (puts result)
+	puts "\n"
 end
 
 
 myDictionary = ["below","down","go","going","horn","how","howdy",
 	"it","i","low","own","part","partner","sit"]
+myOtherDict = ["ate","play","no","notice","i","hall","gate",
+	"art","part","senpai","iron","wait","partner","sat"]
 
 substrings("below", myDictionary)
 substrings("Howdy partner, sit down! How's it going?", myDictionary)
+substrings("Notice me, Senpai! I am awaited by the gates of Valhalla!", myOtherDict)
+substrings("Play.", myOtherDict)
+substrings("There be no spoon!!", myDictionary) #Should result in empty hash
