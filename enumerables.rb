@@ -16,6 +16,7 @@ module Enumerable
 	end
 
 	def my_select
+		return self unless block_given?
 		selected = []
 		self.my_each {|i| selected << i if yield(i)}
 		selected
@@ -23,9 +24,12 @@ module Enumerable
 
 	def my_all?
 		return self unless block_given?
+		switch = true
 		for i in self
-			return false if yield(i) == (false || nil)
+			switch = false if yield(i) == (false || nil)
 		end
+
+		p switch
 	end
 end
 
