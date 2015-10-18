@@ -75,9 +75,25 @@ module TicTacToe
 		end
 
 		def draw?
+			cells = grid.flatten.map { |cell| cell.value }
+			return true if cells.any? { |cell| cell.to_s.empty? } == false
+			false
 		end
 
 		def winner?
+		end
+
+		def winning_combos
+			grid +
+			grid.transpose +
+			diagonals
+		end
+
+		def diagonals
+			[
+				[get_cell(0, 0), get_cell(1, 1), get_cell(2, 2)],
+				[get_cell(0, 2), get_cell(1, 1), get_cell(2, 0)]
+			]
 		end
 	end
 
