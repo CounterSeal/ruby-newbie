@@ -42,7 +42,7 @@ module TicTacToe
 				"6" => [2, 1],
 				"7" => [0, 2],
 				"8" => [1, 2],
-				"9" => [2, 2],
+				"9" => [2, 2]
 			}
 			mapping[human_move]
 		end
@@ -58,6 +58,26 @@ module TicTacToe
 
 		def default_grid
 			Array.new(3) { Array.new(3) { Cell.new } }
+		end
+
+		def get_cell(x, y)
+			grid[y][x]
+		end
+
+		def set_cell(x, y, new_value)
+			get_cell(x, y).value = new_value
+		end
+
+		def game_over
+			return :winner if winner?
+			return :draw if draw?
+			false
+		end
+
+		def draw?
+		end
+
+		def winner?
 		end
 	end
 
