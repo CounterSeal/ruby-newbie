@@ -81,6 +81,12 @@ module TicTacToe
 		end
 
 		def winner?
+			winning_combos.each do |winning_combo|
+				values = winning_combo.map { |cell| cell.value }
+				next if values.all? { |cell| cell.to_s.empty? } == true
+				return true if values.all? { |cell| cell == values[0] } == true
+			end
+			false
 		end
 
 		def winning_combos
