@@ -23,11 +23,15 @@ module TicTacToe
 		end
 
 		def solicit_move
-			puts "#{current_player.name}, make a move! (Enter a number between 1 and 9)"
+			puts "#{current_player.name} [#{current_player.mark}], make your move! (Enter a number between 1 and 9)"
 		end
 
-		def get_move(human_move = gets.chomp)
-			human_move_to_coordinate(human_move)
+		def get_move
+			while true
+				human_move = gets.chomp
+				return human_move_to_coordinate(human_move) if human_move.to_i.between?(1, 9)
+				puts "Enter a number between 1 and 9!"
+			end
 		end
 
 		def game_over_message
