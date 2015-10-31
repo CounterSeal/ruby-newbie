@@ -29,14 +29,22 @@ module TicTacToe
 		def get_move
 			while true
 				human_move = gets.chomp
-				return human_move_to_coordinate(human_move) if human_move.to_i.between?(1, 9)
-				puts "Enter a number between 1 and 9!"
+				x, y = human_move_to_coordinate(human_move)
+				if human_move.length < 2 && human_move.to_i.between?(1, 9)
+					if board.get_cell(x, y).value == "O" || board.get_cell(x, y).value == "X"
+						puts "That move is taken! Choose another."
+					else
+						return x, y
+					end
+				else
+					puts "Enter a number between 1 and 9!"
+				end
 			end
 		end
 
 		def game_over_message
-			return "#{current_player.name} won!" if board.game_over == :winner
-			return "The game ended in a tie!" if board.game_over == :draw
+			return puts "#{current_player.name} won!" if board.game_over == :winner
+			return puts "The game ended in a tie!" if board.game_over == :draw
 		end
 
 		def play
@@ -48,8 +56,8 @@ module TicTacToe
 				x, y = get_move
 				board.set_cell(x, y, current_player.mark)
 				if board.game_over
-					game_over_message
 					board.formatted_grid
+					game_over_message
 					return
 				else
 					switch_players
