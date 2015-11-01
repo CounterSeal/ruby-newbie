@@ -2,6 +2,8 @@
 # Build a tic-tac-toe game on the command line where two human players can play against
 # each other and the board is displayed in between turns.
 
+require 'colorize'
+
 module TicTacToe
 	class Cell
 		attr_accessor :value
@@ -31,20 +33,20 @@ module TicTacToe
 				human_move = gets.chomp
 				x, y = human_move_to_coordinate(human_move)
 				if human_move.length < 2 && human_move.to_i.between?(1, 9)
-					if board.get_cell(x, y).value == "O" || board.get_cell(x, y).value == "X"
-						puts "That move is taken! Choose another."
+					if board.get_cell(x, y).value == current_player.mark || board.get_cell(x, y).value == other_player.mark
+						puts "That move is taken! Choose another.".red
 					else
 						return x, y
 					end
 				else
-					puts "Enter a number between 1 and 9!"
+					puts "Enter a whole number between 1 and 9.".red
 				end
 			end
 		end
 
 		def game_over_message
-			return puts "#{current_player.name} won!" if board.game_over == :winner
-			return puts "The game ended in a tie!" if board.game_over == :draw
+			puts "#{current_player.name} [#{current_player.mark}] won!" if board.game_over == :winner
+			puts "The game ended in a tie!" if board.game_over == :draw
 		end
 
 		def play
@@ -151,13 +153,11 @@ module TicTacToe
 			@name = input.fetch(:name)
 		end
 	end
-
-
 end
 
 
-puts "Welcome to tic tac toe!"
-player1 = TicTacToe::Player.new({mark: "X", name: "Player One"})
-player2 = TicTacToe::Player.new({mark: "O", name: "Player Two"})
+puts "Welcome to tic tac toe!".green
+player1 = TicTacToe::Player.new({mark: "X".yellow, name: "Player One"})
+player2 = TicTacToe::Player.new({mark: "O".magenta, name: "Player Two"})
 players = [player1, player2]
 TicTacToe::Game.new(players).play
