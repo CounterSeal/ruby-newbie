@@ -46,8 +46,8 @@ module Mastermind
 		attr_accessor :answer, :guess
 		def initialize
 			@answer = answer
+			@guess = guess
 			#@grid = grid
-			#@feedback = feedback
 		end
 
 		def solution
@@ -56,15 +56,49 @@ module Mastermind
 		end
 
 		def start
+			guesses = 11
 			12.times do
-				guess = gets.chomp.downcase
-				if guess == @answer
+				@guess = gets.chomp.downcase
+				if @guess == @answer
 					puts "You win!"
 					break
-				else
-					puts "Try again!"
+				end
+
+				feedback(guesses)
+				evaluate
+				guesses -= 1
+			end
+		end
+
+		def feedback(guesses)
+			puts "Try again! (#{guesses} guesses left)" if guesses >= 2
+			puts "Try again! (1 guess left)" if guesses == 1
+			puts "You lose." if guesses == 0
+		end
+
+		def evaluate
+			guess = @guess.split('')
+			answer = @answer.split('')
+			correctAll = 0
+			correctColor = 0
+			leftovers = []
+
+			i = 0
+			guess.each do |a|
+				a == answer[i] ? correctAll += 1 : leftovers << a
+				i += 1
+			end
+
+			leftovers.each do |x|
+				answer.each do |a|
+					if x == a
+						correctColor += 1
+						next
+					end
 				end
 			end
+
+			puts "#{correctAll} correct colors in the right place. #{correctColor} correct colors found."
 		end
 
 =begin
@@ -77,10 +111,6 @@ module Mastermind
 		private
 
 		def default_grid
-			Array.new(12) { Array.new(4) { Cell.new } }
-		end
-
-		def feedback
 			Array.new(12) { Array.new(4) { Cell.new } }
 		end
 =end
