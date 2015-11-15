@@ -51,8 +51,9 @@ module Mastermind
 		end
 
 		def solution
-			@answer = 4.times.map { ['b', 'g', 'c', 'p', 'r', 'y'].sample }.join
-			#4.times.map { ['b'.blue, 'g'.green, 'c'.cyan, 'p'.magenta, 'r'.red, 'y'.yellow].sample }.join
+			@answer = 'rycc'
+			#@answer = 4.times.map { ['b', 'g', 'c', 'p', 'r', 'y'].sample }.join
+			#@answer = 4.times.map { ['b'.blue, 'g'.green, 'c'.cyan, 'p'.magenta, 'r'.red, 'y'.yellow].sample }.join
 		end
 
 		def start
@@ -66,6 +67,7 @@ module Mastermind
 
 				feedback(guesses)
 				evaluate
+				puts "\n"
 				guesses -= 1
 			end
 		end
@@ -76,29 +78,40 @@ module Mastermind
 			puts "You lose." if guesses == 0
 		end
 
-		def evaluate
+		def evaluate #answer array still not deleting elements correctly. rcpr and ycrc
 			guess = @guess.split('')
 			answer = @answer.split('')
-			correctAll = 0
-			correctColor = 0
-			leftovers = []
+			correct_all = 0
+			correct_color = 0
+			leftover_guess = []
+			leftover_answer = answer
 
 			i = 0
-			guess.each do |a|
-				a == answer[i] ? correctAll += 1 : leftovers << a
+			guess.each_with_index do |a, index|
+				if a == answer[i]
+					correct_all += 1
+					leftover_answer.delete_at(index)
+				else
+					leftover_guess << a
+				end
 				i += 1
 			end
 
-			leftovers.each do |x|
-				answer.each do |a|
+			#leftover_answer = answer - leftover_answer
+
+			leftover_guess.each do |x|
+				leftover_answer.each_with_index do |a, index|
 					if x == a
-						correctColor += 1
-						next
+						correct_color += 1
+						leftover_answer.delete_at(index)
+						break
 					end
 				end
 			end
 
-			puts "#{correctAll} correct colors in the right place. #{correctColor} correct colors found."
+			puts "#{correct_all} correct colors in the right place. #{correct_color} correct colors found."
+			puts "Leftover Guess: #{leftover_guess.join}"
+			puts "Leftover Answer: #{leftover_answer.join}"
 		end
 
 =begin
