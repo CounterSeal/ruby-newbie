@@ -6,15 +6,6 @@
 require 'colorize'
 
 module Mastermind
-=begin
-	class Cell
-		attr_accessor :value
-		def initialize(value = "")
-			@value = value
-		end
-	end
-=end
-
 	class Game
 		attr_reader :game
 		def initialize
@@ -51,8 +42,9 @@ module Mastermind
 		end
 
 		def solution
-			@answer = 'rycc'
-			#@answer = 4.times.map { ['b', 'g', 'c', 'p', 'r', 'y'].sample }.join
+			#@answer = 'brby'
+			#@answer = 'rycc'
+			@answer = 4.times.map { ['b', 'g', 'c', 'p', 'r', 'y'].sample }.join
 			#@answer = 4.times.map { ['b'.blue, 'g'.green, 'c'.cyan, 'p'.magenta, 'r'.red, 'y'.yellow].sample }.join
 		end
 
@@ -65,39 +57,47 @@ module Mastermind
 					break
 				end
 
-				feedback(guesses)
 				evaluate
+				feedback(guesses)
 				puts "\n"
 				guesses -= 1
 			end
 		end
 
 		def feedback(guesses)
-			puts "Try again! (#{guesses} guesses left)" if guesses >= 2
-			puts "Try again! (1 guess left)" if guesses == 1
-			puts "You lose." if guesses == 0
+			case guesses
+			when 2..11
+				puts "Try again! (#{guesses} guesses left)" if guesses >= 2
+			when 1
+				puts "Try again! (1 guess left)" if guesses == 1
+			when 0
+				puts "You lose. Play again? Y/N" if guesses == 0
+				new_game = Mastermind::Game.new
+				choice = gets.chomp.downcase
+				choice == "y" ? new_game.start : new_game.quit
+			end
 		end
 
-		def evaluate #answer array still not deleting elements correctly. rcpr and ycrc
+		def evaluate
 			guess = @guess.split('')
 			answer = @answer.split('')
 			correct_all = 0
 			correct_color = 0
 			leftover_guess = []
-			leftover_answer = answer
+			leftover_answer = @answer.split('')
 
 			i = 0
 			guess.each_with_index do |a, index|
 				if a == answer[i]
 					correct_all += 1
-					leftover_answer.delete_at(index)
+					leftover_answer[index] = nil
 				else
 					leftover_guess << a
 				end
 				i += 1
 			end
 
-			#leftover_answer = answer - leftover_answer
+			leftover_answer -= [nil]
 
 			leftover_guess.each do |x|
 				leftover_answer.each_with_index do |a, index|
@@ -109,11 +109,10 @@ module Mastermind
 				end
 			end
 
-			puts "#{correct_all} correct colors in the right place. #{correct_color} correct colors found."
-			puts "Leftover Guess: #{leftover_guess.join}"
-			puts "Leftover Answer: #{leftover_answer.join}"
+			puts "#{correct_all} correct color(s) in the right place. #{correct_color} correct color(s) found."
+			#puts "Leftover Guess: #{leftover_guess.join}"
+			#puts "Leftover Answer: #{leftover_answer.join}"
 		end
-
 =begin
 		def formatted_grid
 			grid.each do |row|
@@ -131,7 +130,7 @@ module Mastermind
 
 	class Player
 		attr_accessor :name
-		def initialize(name = "Codebreaker1337")
+		def initialize(name = "Player One")
 			@name = name
 		end
 	end
