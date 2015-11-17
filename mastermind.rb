@@ -13,10 +13,20 @@ module Mastermind
 		end
 
 		def start
-			puts "Welcome to MASTERMIND. Let the games, begin!"
-			puts "Ready, Player One? Y/N"
-			choice = gets.chomp.downcase
-			choice == "y" ? play : quit
+			puts "Welcome to MASTERMIND. Let's begin!"
+
+			while true
+				puts "Would you like to be the (1)Code Breaker or the (2)Code Maker?"
+				choice = gets.chomp.downcase
+				if choice == "1"
+					play_breaker
+					break
+				elsif choice == "2"
+					play_maker
+				else
+					puts "Enter 1 or 2"
+				end
+			end
 		end
 
 		def quit
@@ -24,12 +34,16 @@ module Mastermind
 			exit
 		end
 
-		def play
+		def play_breaker
 			player = Player.new
 			board = Board.new
-			puts "#{player.name}, take your guess!"
-			puts board.solution
-			board.start
+			board.breaker_mode
+		end
+
+		def play_maker
+			player = Player.new
+			board = Board.new
+			board.maker_mode
 		end
 	end
 
@@ -48,7 +62,29 @@ module Mastermind
 			#@answer = 4.times.map { ['b'.blue, 'g'.green, 'c'.cyan, 'p'.magenta, 'r'.red, 'y'.yellow].sample }.join
 		end
 
-		def start
+		def breaker_mode
+			puts "Take your guess!"
+			solution
+			guesses = 11
+			12.times do
+				@guess = gets.chomp.downcase
+				if @guess == @answer
+					puts "You win!"
+					puts "Play again? Y/N"
+					play_again
+					break
+				end
+
+				evaluate
+				feedback(guesses)
+				puts "\n"
+				guesses -= 1
+			end
+		end
+
+		def maker_mode
+			puts "Choose a combination of 4 colors:"
+			@answer = gets.chomp.downcase
 			guesses = 11
 			12.times do
 				@guess = gets.chomp.downcase
@@ -71,10 +107,8 @@ module Mastermind
 			when 1
 				puts "Try again! (1 guess left)" if guesses == 1
 			when 0
-				puts "You lose. Play again? Y/N" if guesses == 0
-				new_game = Mastermind::Game.new
-				choice = gets.chomp.downcase
-				choice == "y" ? new_game.start : new_game.quit
+				puts "You lose. The correct combination was \"#{@answer}\". Play again? Y/N" if guesses == 0
+				play_again
 			end
 		end
 
@@ -113,19 +147,14 @@ module Mastermind
 			#puts "Leftover Guess: #{leftover_guess.join}"
 			#puts "Leftover Answer: #{leftover_answer.join}"
 		end
-=begin
-		def formatted_grid
-			grid.each do |row|
-				puts row.map { |cell| cell.value.empty? ? "_" : cell.value }.join(" ")
-			end
-		end
 
 		private
 
-		def default_grid
-			Array.new(12) { Array.new(4) { Cell.new } }
+		def play_again
+			new_game = Mastermind::Game.new
+			choice = gets.chomp.downcase
+			choice == "y" ? new_game.start : new_game.quit
 		end
-=end
 	end
 
 	class Player
