@@ -3,7 +3,7 @@
 # of turns (like hangman with colored pegs). Each turn you get some feedback about how good your
 # guess was -- whether it was exactly correct or just the correct color but in the wrong space.
 
-require 'colorize'
+#require 'colorize'
 
 module Mastermind
 	class Game
@@ -48,18 +48,11 @@ module Mastermind
 	end
 
 	class Board
-		attr_accessor :answer, :guess
+		attr_accessor :answer, :guess, :correct_all_colors
 		def initialize
 			@answer = answer
 			@guess = guess
-			#@grid = grid
-		end
-
-		def solution
-			#@answer = 'brby'
-			#@answer = 'rycc'
-			@answer = 4.times.map { ['b', 'g', 'c', 'p', 'r', 'y'].sample }.join
-			#@answer = 4.times.map { ['b'.blue, 'g'.green, 'c'.cyan, 'p'.magenta, 'r'.red, 'y'.yellow].sample }.join
+			@correct_all_colors = [nil, nil, nil, nil]
 		end
 
 		def breaker_mode
@@ -87,17 +80,29 @@ module Mastermind
 			@answer = gets.chomp.downcase
 			guesses = 11
 			12.times do
-				@guess = gets.chomp.downcase
+				@guess = ai_guess(@correct_all_colors)
+				puts @guess
 				if @guess == @answer
-					puts "You win!"
+					puts "The computer has won!"
+					puts "Play again? Y/N"
+					play_again
 					break
 				end
 
 				evaluate
 				feedback(guesses)
-				puts "\n"
+				puts "Next? (Press Enter or Return)"
+				next if gets.chomp.downcase == "\n"
 				guesses -= 1
 			end
+		end
+
+		private
+
+		def solution
+			@answer = 4.times.map { ['b', 'g', 'c', 'p', 'r', 'y'].sample }.join
+			#@answer = 'brby'
+			#@answer = 'rycc'
 		end
 
 		def feedback(guesses)
@@ -124,6 +129,7 @@ module Mastermind
 			guess.each_with_index do |a, index|
 				if a == answer[i]
 					correct_all += 1
+					@correct_all_colors[index] = a
 					leftover_answer[index] = nil
 				else
 					leftover_guess << a
@@ -148,12 +154,25 @@ module Mastermind
 			#puts "Leftover Answer: #{leftover_answer.join}"
 		end
 
-		private
-
 		def play_again
 			new_game = Mastermind::Game.new
 			choice = gets.chomp.downcase
 			choice == "y" ? new_game.start : new_game.quit
+		end
+
+		def ai_guess(correct_all)
+			colors = ['b', 'g', 'c', 'p', 'r', 'y']
+			guess = []
+			choosing = Random.new
+			4.times do |x|
+				if correct_all[x] == nil
+					guess << colors[choosing.rand(5)]
+				else
+					guess << correct_all[x]
+				end
+			end
+
+			guess.join('')
 		end
 	end
 
