@@ -48,11 +48,13 @@ module Mastermind
 	end
 
 	class Board
-		attr_accessor :answer, :guess, :correct_all_colors
+		attr_accessor :answer, :guess, :correct_all_colors, :correct_only_colors, :all_guesses
 		def initialize
 			@answer = answer
 			@guess = guess
+			@all_guesses = []
 			@correct_all_colors = [nil, nil, nil, nil]
+			@correct_only_colors = []
 		end
 
 		def breaker_mode
@@ -80,7 +82,7 @@ module Mastermind
 			@answer = gets.chomp.downcase
 			guesses = 11
 			12.times do
-				@guess = ai_guess(@correct_all_colors)
+				@guess = ai_guess(@correct_all_colors, @correct_only_colors, @all_guesses)
 				puts @guess
 				if @guess == @answer
 					puts "The computer has won!"
@@ -143,6 +145,7 @@ module Mastermind
 				leftover_answer.each_with_index do |a, index|
 					if x == a
 						correct_color += 1
+						@correct_only_colors << a
 						leftover_answer.delete_at(index)
 						break
 					end
@@ -150,6 +153,7 @@ module Mastermind
 			end
 
 			puts "#{correct_all} correct color(s) in the right place. #{correct_color} correct color(s) found."
+			#p @correct_only_colors
 			#puts "Leftover Guess: #{leftover_guess.join}"
 			#puts "Leftover Answer: #{leftover_answer.join}"
 		end
@@ -160,19 +164,34 @@ module Mastermind
 			choice == "y" ? new_game.start : new_game.quit
 		end
 
-		def ai_guess(correct_all)
+		def ai_guess(correct_all, correct_colors, all_guesses)
 			colors = ['b', 'g', 'c', 'p', 'r', 'y']
 			guess = []
+			correct_colors2 = correct_colors
+			result = ''
 			choosing = Random.new
-			4.times do |x|
-				if correct_all[x] == nil
-					guess << colors[choosing.rand(5)]
-				else
-					guess << correct_all[x]
+			while @all_guesses.include?(result) || result.empty?
+				4.times do |x|
+					if correct_all[x] == nil
+						if correct_colors2.empty? == false
+							color = correct_colors2[choosing.rand(correct_colors2.length)]
+							guess << color
+							correct_colors2.delete_at(correct_colors2.find_index(color))
+						else
+							guess << colors[choosing.rand(6)]
+						end
+					else
+						guess << correct_all[x]
+					end
 				end
+
+				result = guess.join('')
+				guess = []
+				correct_colors2 = correct_colors
 			end
 
-			guess.join('')
+			@all_guesses << result
+			result
 		end
 	end
 
