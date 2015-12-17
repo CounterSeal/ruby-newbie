@@ -1,5 +1,7 @@
 # Hangman
 
+require 'open-uri'
+
 module Hangman
 	class Game
 		attr_accessor :game, :answer, :board, :guess, :guessed
@@ -27,6 +29,11 @@ module Hangman
 			guesses_left = 5
 			6.times do
 				@guess = gets.chomp.downcase
+
+				while @guess == "-define"
+					define
+					@guess = gets.chomp.downcase
+				end
 
 				if @guess == @answer
 					puts "Correct. You win!"
@@ -62,6 +69,11 @@ module Hangman
 		def word
 			lines = File.readlines('5desk.txt')
 			lines[rand(lines.length)].chomp
+		end
+
+		def define
+			url = 'http://dictionary.reference.com/browse/' + @answer
+			puts open(url).readline
 		end
 
 		def create_board
