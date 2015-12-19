@@ -4,13 +4,14 @@ require 'open-uri'
 
 module Hangman
 	class Game
-		attr_accessor :game, :answer, :board, :guess, :guessed
+		attr_accessor :game, :answer, :board, :guess, :guessed, :guesses_left
 		def initialize
 			@game = game
 			@answer = answer
 			@board = board
 			@guess = guess
 			@guessed = []
+			@guesses_left = 5
 		end
 
 		def start
@@ -26,28 +27,26 @@ module Hangman
 
 		def play
 			puts "Take your guess!"
-			guesses_left = 5
 			6.times do
 				@guess = gets.chomp.downcase
-
-				while @guess == "-define"
-					define
-					@guess = gets.chomp.downcase
-				end
-
+				commands
 				if @guess == @answer
 					puts "Correct. You win!"
 					exit
 				else
 					guess_process(@guess)
 					if @board.join == @answer
+						puts @board.join
 						puts "Correct. You win!"
 						exit
+					elsif @guesses_left == 0
+						puts "You lose!"
 					else
 						puts @board.join
 						puts "#{guesses_left} guesses remaining."
 						puts "Incorrect guesses: #{@guessed.join(', ')}"
-						guesses_left -= 1
+						puts "\n"
+						@guesses_left -= 1
 					end
 				end
 			end
@@ -62,18 +61,39 @@ module Hangman
 				end
 			else
 				@guessed << player_guess
-				puts "Try Again!"
 			end
+		end
+
+		def commands
+			command_list = ["-define", "-save"]
+			while command_list.include?(@guess)
+				case @guess
+				when "-define"
+					define
+					@guess = gets.chomp.downcase
+				when "-save"
+					save
+					@guess = gets.chomp.downcase
+				end
+			end
+		end
+
+		def save
+			saved_data = { answer: @answer, board: @board, guesses_left: @guesses_left + 1, guessed: @guessed }
+			save_file = File.open("save_game.txt", "w")
+			save_file.puts saved_data.to_s
+			save_file.close
+		end
+
+		def define
+			url = 'http://dictionary.reference.com/browse/' + @answer
+			#puts open(url).read.match(/<span class="def-number">1[^:]*/m)
+			puts open(url).read.match(/<span class="def-number">1(.*)"def-number">2/m)
 		end
 
 		def word
 			lines = File.readlines('5desk.txt')
 			lines[rand(lines.length)].chomp
-		end
-
-		def define
-			url = 'http://dictionary.reference.com/browse/' + @answer
-			puts open(url).readline
 		end
 
 		def create_board
