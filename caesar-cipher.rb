@@ -31,9 +31,9 @@ def caesarSalad(text, num)
 		end
 	end
 
-	puts newText
+	newText
 end
 
-caesarSalad("I like Caesar Salad.", 4)
-caesarSalad("I am still a Ruby Newbie, but I am getting better!!", 3)
-caesarSalad("If you're an animal, then TEAR UP THE FLOOR!", 7)
+# puts caesarSalad("I like Caesar Salad.", 4)
+# puts caesarSalad("I am still a Ruby Newbie, but I am getting better!!", 3)
+# puts caesarSalad("If you're an animal, then TEAR UP THE FLOOR!", 7)

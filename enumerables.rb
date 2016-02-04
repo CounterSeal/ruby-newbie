@@ -116,10 +116,14 @@ module Enumerable
 
 end
 
-a = [1,2,3,4,5,6,7]
-b = ["Hello","Ni Hao","Salut","Hola"]
-c = [nil, false, nil, nil, 5]
-d = []
+
+# -------
+# a = [1,2,3,4,5,6,7]
+# b = ["Hello","Ni Hao","Salut","Hola"]
+# c = [nil, false, nil, nil, 5]
+# d = []
+# -------
+
 
 # my_each
 #a.my_each {|n| puts n}
@@ -170,8 +174,13 @@ d = []
 #p b.my_map {|x| x + ", Replicant!"} #["Hello, Replicant!","Ni Hao, Replicant!","Salut, Replicant!","Hola, Replicant!"]
 #p c.my_map {"doge"} #["doge", "doge", "doge", "doge", "doge"]
 #p d.map #enum
-testProc = Proc.new {|n| n*2}
-p a.my_map(testProc) #[2,4,6,8,10,12,14]
+
+
+# -------
+# testProc = Proc.new {|n| n*2}
+# p a.my_map(testProc) #[2,4,6,8,10,12,14]
+# -------
+
 
 # my_inject
 #puts a.my_inject(3) {|sum, n| sum + n} #28
