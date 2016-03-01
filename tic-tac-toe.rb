@@ -156,8 +156,8 @@ module TicTacToe
 end
 
 
-puts "Welcome to tic tac toe!".green
-player1 = TicTacToe::Player.new({mark: "X".yellow, name: "Player One"})
-player2 = TicTacToe::Player.new({mark: "O".magenta, name: "Player Two"})
-players = [player1, player2]
-TicTacToe::Game.new(players).play
+#puts "Welcome to tic tac toe!".green
+#player1 = TicTacToe::Player.new({mark: "X".yellow, name: "Player One"})
+#player2 = TicTacToe::Player.new({mark: "O".magenta, name: "Player Two"})
+#players = [player1, player2]
+#TicTacToe::Game.new(players).play
