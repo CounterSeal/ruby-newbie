@@ -10,9 +10,10 @@ module ConnectFour
 		end
 
 		def start
-			@board = Board.new
-			@board.create_board
-			@player1 = Player.new("X")
+		end
+
+		def switch_players
+			@player1, @player2 = @player2, @player1
 		end
 	end
 
@@ -25,11 +26,25 @@ module ConnectFour
 
 	class Board
 		attr_reader :board
-		def initialize
-			@board = new_board
+		def initialize(input = {})
+			@board = input.fetch(:board, default_grid)
 		end
 
-		def new_board
+		def get_cell(x, y)
+			board[y][x]
+		end
+
+		def set_cell(x, y, new_value)
+			get_cell(x, y).value = new_value
+		end
+
+		def game_over
+			return :winner if winner?
+			return :draw if draw?
+			false
+		end
+
+		def default_grid
 			Array.new(6) { Array.new(7) { Cell.new } }
 		end
 	end
@@ -41,6 +56,14 @@ module ConnectFour
 		end
 	end
 end
+
+
+#puts "Welcome to Connect Four!"
+
+#player1 = ConnectFour::Player.new("X")
+#player2 = ConnectFour::Player.new("O")
+#players = [player1, player2]
+#ConnectFour::Game.new(players).start
 
 #g = ConnectFour::Game.new
 #g.start
