@@ -9,6 +9,16 @@ describe ConnectFour::Game do
 		@players = [@player1, @player2]
 		@game = ConnectFour::Game.new(@players)
 	end
+
+	describe "#human_move_to_coordinate" do
+		it "should return the corresponding cell" do
+			expect(@game.human_move_to_coordinate("D2")).to eq([1, 3])
+		end
+
+		it "should return the corresponding cell" do
+			expect(@game.human_move_to_coordinate("G6")).to eq([5, 6])
+		end
+	end
 end
 
 describe ConnectFour::Board do
